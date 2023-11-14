@@ -1,0 +1,31 @@
+services:
+  database:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: time_manager_api_dev
+      DATABASE_URL: ecto://postgres:root@database/time_manager_api_dev
+      SECRET_KEY_BASE: gtc5cQ6dTlyk417Qf6LgzGB+WXQnsIjghayk63KyNRiIGUg1Y++7lOZMsPNEc/Lk
+
+  backend:
+    build:
+      context: ./time-manager-api # Path to the Elixir Phoenix backend code
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    depends_on:
+      - database
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: time_manager_api_dev
+      DATABASE_URL: ecto://postgres:root@database/time_manager_api_dev
+      SECRET_KEY_BASE: gtc5cQ6dTlyk417Qf6LgzGB+WXQnsIjghayk63KyNRiIGUg1Y++7lOZMsPNEc/Lk
+
+  frontend:
+    build:
+      context: ./time-manager-vue # Path to the Vue.js frontend code
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
